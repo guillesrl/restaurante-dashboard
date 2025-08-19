@@ -1,0 +1,57 @@
+{
+  "name": "Restaurante Webhook",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "restaurante-webhook",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "webhookId": "restaurante-webhook"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Procesar datos recibidos del webhook\nconst { body } = $input.all()[0].json;\n\n// Aquí puedes procesar los datos recibidos\n// Por ejemplo, guardar en base de datos o enviar notificaciones\n\n// Ejemplo de respuesta exitosa\nreturn {\n  status: 'received',\n  data: body\n};"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [[{ "node": "Webhook", "type": "main", "index": 0 }]]
+    },
+    "Webhook": {
+      "main": [[{ "node": "Function", "type": "main", "index": 0 }]]
+    },
+    "Function": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "tag": "Restaurante"
+}
