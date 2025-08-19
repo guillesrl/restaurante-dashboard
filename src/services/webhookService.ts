@@ -1,5 +1,5 @@
 
-const N8N_WEBHOOK_URL = 'https://n8n.guille.live/webhook/ccb11e02-0eeb-4818-ba9b-35652979e31d';
+const N8N_WEBHOOK_URL = '/api/send-webhook';
 
 // Ensure fetch is available in all environments
 const _fetch = typeof window !== 'undefined' ? window.fetch : require('node-fetch');
