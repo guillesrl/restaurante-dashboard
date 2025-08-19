@@ -1,0 +1,34 @@
+# Dependencias
+node_modules/
+.next/
+
+# Archivos de desarrollo
+.env*.local
+.env
+.env.development
+.env.test
+.env.production
+
+# Logs
+*.log
+
+# Archivos del sistema
+.DS_Store
+*.pem
+
+# Archivos de configuración local
+vercel.json
+
+# Archivos de prueba
+**/__tests__/**
+**/*.test.*
+**/*.spec.*
+
+# Archivos de documentación
+README.md
+CHANGELOG.md
+
+# Archivos de configuración de editores
+.vscode/
+.idea/
+*.sublime-*
