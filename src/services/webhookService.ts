@@ -1,0 +1,81 @@
+
+const N8N_WEBHOOK_URL = 'https://n8n.guille.live/webhook/ccb11e02-0eeb-4818-ba9b-35652979e31d';
+
+// Ensure fetch is available in all environments
+const _fetch = typeof window !== 'undefined' ? window.fetch : require('node-fetch');
+
+// Type assertion for fetch
+type FetchFunction = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+const fetch = _fetch as unknown as FetchFunction;
+
+export interface WebhookPayload {
+  event: string;
+  data: any;
+  timestamp: string;
+}
+
+export async function sendToWebhook(payload: WebhookPayload) {
+  try {
+    console.log('Sending webhook to:', N8N_WEBHOOK_URL);
+    console.log('Payload:', JSON.stringify(payload, null, 2));
+    
+    const response = await fetch(N8N_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        ...payload,
+        source: 'restaurante-dashboard',
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Webhook error response:', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        body: errorText,
+      });
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
+
+    try {
+      const data = await response.json();
+      console.log('Webhook successful:', data);
+      return data;
+    } catch (e) {
+      console.log('Webhook successful (no JSON response)');
+      return { success: true };
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error sending webhook:', {
+      error: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined,
+      payload: JSON.stringify(payload, null, 2),
+    });
+    throw new Error(`Failed to send webhook: ${errorMessage}`);
+  }
+}
+
+// Ejemplos de uso:
+// Enviar notificación de nueva reserva
+export async function notifyNewReservation(reservationData: any) {
+  return sendToWebhook({
+    event: 'reservation.created',
+    data: reservationData,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+// Enviar notificación de actualización de pedido
+export async function notifyOrderUpdate(orderData: any) {
+  return sendToWebhook({
+    event: 'order.updated',
+    data: orderData,
+    timestamp: new Date().toISOString(),
+  });
+}
