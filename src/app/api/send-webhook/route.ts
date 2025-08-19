@@ -23,8 +23,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: 200 });
+    const responseText = await response.text();
+    try {
+      const data = JSON.parse(responseText);
+      return NextResponse.json(data, { status: 200 });
+    } catch (e) {
+      // If n8n returns a non-JSON response (e.g., just "workflow executed"), handle it gracefully.
+      return NextResponse.json({ success: true, message: 'Webhook received by n8n', response: responseText }, { status: 200 });
+    }
 
   } catch (error) {
     let errorMessage = 'Unknown error';

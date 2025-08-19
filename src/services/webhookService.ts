@@ -88,3 +88,30 @@ export async function notifyOrderUpdate(orderData: any) {
     timestamp: new Date().toISOString(),
   });
 }
+
+// Enviar solicitud para obtener las reservas de hoy
+export async function getTodaysReservations() {
+  return sendToWebhook({
+    event: 'reservations.get_today',
+    data: {},
+    timestamp: new Date().toISOString(),
+  });
+}
+
+// Enviar solicitud para obtener los pedidos de hoy
+export async function getTodaysOrders() {
+  return sendToWebhook({
+    event: 'orders.get_today',
+    data: {},
+    timestamp: new Date().toISOString(),
+  });
+}
+
+// Enviar solicitud para obtener el menú
+export async function getMenu() {
+  return sendToWebhook({
+    event: 'menu.get',
+    data: {},
+    timestamp: new Date().toISOString(),
+  });
+}
