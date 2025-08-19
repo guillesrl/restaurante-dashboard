@@ -51,7 +51,16 @@ export async function sendToWebhook(payload: WebhookPayload) {
       return { success: true };
     }
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Raw error caught in sendToWebhook:', error);
+    let errorMessage = 'An unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'object' && error !== null) {
+      errorMessage = JSON.stringify(error);
+    } else if (error) {
+      errorMessage = String(error);
+    }
+
     console.error('Error sending webhook:', {
       error: errorMessage,
       stack: error instanceof Error ? error.stack : undefined,
