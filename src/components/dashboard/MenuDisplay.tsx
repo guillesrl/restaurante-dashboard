@@ -64,7 +64,7 @@ export function MenuDisplay() {
                     <div className="flex justify-between items-center">
                       <h4 className="font-semibold">{item.name}</h4>
                       <p className="font-mono text-sm">${item.price.toFixed(2)}</p>
-                      <br />
+                      <br/>
                     </div>
                     <p className="text-sm text-gray-600 mt-1">{item.description}</p>
                   </div>
